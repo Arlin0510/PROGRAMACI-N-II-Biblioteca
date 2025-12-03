@@ -15,20 +15,17 @@ public class Biblioteca {
     private JPanel mainPanel;
     private CardLayout cardLayout;
     
-    // Archivos para persistencia
     private static final String LIBROS_FILE = "libros.dat";
     private static final String AUTORES_FILE = "autores.dat";
     private static final String ESTUDIANTES_FILE = "estudiantes.dat";
     
-    // Estructuras de datos para almacenar información
     private List<Libro> libros;
     private List<Autor> autores;
     private List<Estudiante> estudiantes;
     private DefaultListModel<String> listModelLibros;
     private DefaultTableModel tableModelAutores;
     private DefaultTableModel tableModelEstudiantes;
-    
-    // Componentes de UI
+
     private JList<String> listaLibros;
     private JTable tablaAutores;
     private JTable tablaEstudiantes;
@@ -48,41 +45,28 @@ public class Biblioteca {
     }
 
     public Biblioteca() {
-        cargarDatos(); // Cargar datos persistentes
+        cargarDatos();
         initialize();
     }
-
-    // ==================== PERSISTENCIA DE OBJETOS ====================
-    
     private void cargarDatos() {
-        // Cargar libros
         libros = cargarDesdeArchivo(LIBROS_FILE);
         if (libros == null) {
             libros = new ArrayList<>();
-            // Datos iniciales si no hay archivo
             libros.add(new Libro("Cien años de soledad", "Gabriel García Márquez", "1967", "Novela"));
             libros.add(new Libro("1984", "George Orwell", "1949", "Ciencia Ficción"));
         }
-        
-        // Cargar autores
         autores = cargarDesdeArchivo(AUTORES_FILE);
         if (autores == null) {
             autores = new ArrayList<>();
-            // Datos iniciales si no hay archivo
             autores.add(new Autor("Gabriel García Márquez", "Colombiano", 45, "1927"));
             autores.add(new Autor("Jane Austen", "Británica", 6, "1775"));
         }
-        
-        // Cargar estudiantes
         estudiantes = cargarDesdeArchivo(ESTUDIANTES_FILE);
         if (estudiantes == null) {
             estudiantes = new ArrayList<>();
-            // Datos iniciales si no hay archivo
             estudiantes.add(new Estudiante("2023001", "Ana García López", "Ing. Sistemas", "2023", "555-0101"));
             estudiantes.add(new Estudiante("2023002", "Carlos Rodríguez", "Medicina", "2023", "555-0102"));
         }
-        
-        // Inicializar modelos
         listModelLibros = new DefaultListModel<>();
         actualizarListaLibros();
         
@@ -154,7 +138,6 @@ public class Biblioteca {
             });
         }
     }
-
     private void actualizarTablaEstudiantes() {
         tableModelEstudiantes.setRowCount(0);
         for (Estudiante estudiante : estudiantes) {
@@ -166,19 +149,13 @@ public class Biblioteca {
             });
         }
     }
-
-    // ==================== INTERFAZ DE USUARIO ====================
     
     private void initialize() {
         frame = new JFrame();
         frame.setBounds(100, 100, 1000, 700);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Sistema de Biblioteca - Con Persistencia");
-        
-        // Menú principal
         JMenuBar menuBar = new JMenuBar();
-        
-        // Menú Archivo
         JMenu menuArchivo = new JMenu("Archivo");
         JMenuItem menuItemGuardar = new JMenuItem("Guardar Todo");
         JMenuItem menuItemSalir = new JMenuItem("Salir");
@@ -193,7 +170,6 @@ public class Biblioteca {
         menuArchivo.addSeparator();
         menuArchivo.add(menuItemSalir);
         
-        // Menú Navegación
         JMenu menuNavegacion = new JMenu("Navegación");
         JMenuItem menuItemInicio = new JMenuItem("Inicio");
         JMenuItem menuItemLibros = new JMenuItem("Libros");
@@ -219,7 +195,6 @@ public class Biblioteca {
         menuNavegacion.add(menuItemAutores);
         menuNavegacion.add(menuItemEstudiantes);
         
-        // Menú Ayuda
         JMenu menuAyuda = new JMenu("Ayuda");
         JMenuItem menuItemAcercaDe = new JMenuItem("Acerca de");
         menuItemAcercaDe.addActionListener(e -> mostrarAcercaDe());
@@ -322,7 +297,7 @@ public class Biblioteca {
         // Botón de guardar en el menú principal
         JPanel panelInferior = new JPanel();
         panelInferior.setOpaque(false);
-        JButton btnGuardarMenu = new JButton("💾 Guardar Todos los Datos");
+        JButton btnGuardarMenu = new JButton("Guardar Todos los Datos");
         btnGuardarMenu.addActionListener(e -> {
             guardarTodo();
             JOptionPane.showMessageDialog(frame, "Todos los datos han sido guardados exitosamente!");
@@ -379,7 +354,6 @@ public class Biblioteca {
             }
         };
         
-        // Header
         JPanel headerPanel = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -404,7 +378,6 @@ public class Biblioteca {
         headerPanel.add(btnRegresar, BorderLayout.WEST);
         headerPanel.add(lblTitulo, BorderLayout.CENTER);
         
-        // Panel de estadísticas
         JPanel statsPanel = new JPanel(new GridLayout(2, 2, 20, 20));
         statsPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
         statsPanel.setOpaque(false);
@@ -413,10 +386,9 @@ public class Biblioteca {
         statsPanel.add(crearTarjetaEstadistica("🎓 Estudiantes Registrados", String.valueOf(estudiantes.size()), new Color(64, 224, 208)));
         statsPanel.add(crearTarjetaEstadistica("✍ Autores Registrados", String.valueOf(autores.size()), new Color(186, 85, 211)));
         statsPanel.add(crearTarjetaEstadistica("📋 Préstamos Activos", "67", new Color(32, 178, 170)));
-        
-        // Panel de archivos persistentes
+   
         JPanel archivosPanel = new JPanel(new BorderLayout());
-        archivosPanel.setBorder(BorderFactory.createTitledBorder("💾 Archivos de Persistencia"));
+        archivosPanel.setBorder(BorderFactory.createTitledBorder("Archivos de Persistencia"));
         archivosPanel.setBackground(new Color(255, 255, 255, 150));
         archivosPanel.setOpaque(true);
         
@@ -487,15 +459,12 @@ public class Biblioteca {
             }
         };
         
-        // Header
         JPanel headerPanel = crearHeaderPanel("MÓDULO LIBROS - GESTIÓN DE LIBROS");
         
-        // Panel principal dividido
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitPane.setDividerLocation(600);
         splitPane.setOpaque(false);
         
-        // Panel izquierdo - Lista de libros
         JPanel panelLibros = new JPanel(new BorderLayout());
         panelLibros.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         panelLibros.setBackground(new Color(255, 255, 255, 200));
@@ -508,26 +477,24 @@ public class Biblioteca {
         JScrollPane scrollLibros = new JScrollPane(listaLibros);
         scrollLibros.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(new Color(75, 0, 130), 2),
-            "📚 Catálogo de Libros Disponibles"
+            " Catálogo de Libros Disponibles"
         ));
         
         panelLibros.add(scrollLibros, BorderLayout.CENTER);
         
-        // Panel derecho - Botones de acción
         JPanel panelAcciones = new JPanel();
         panelAcciones.setLayout(new BoxLayout(panelAcciones, BoxLayout.Y_AXIS));
         panelAcciones.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
         panelAcciones.setBackground(new Color(255, 255, 255, 200));
         
-        JButton btnLibrosAutor = crearBotonAccion("📋 Libros por Autor", new Color(147, 112, 219));
-        JButton btnAgregarLibro = crearBotonAccion("➕ Agregar Libro", new Color(64, 224, 208));
-        JButton btnEditarLibro = crearBotonAccion("✏ Editar Libro", new Color(186, 85, 211));
-        JButton btnEliminarLibro = crearBotonAccion("🗑 Eliminar Libro", new Color(32, 178, 170));
-        JButton btnBuscarLibro = crearBotonAccion("🔍 Buscar Libro", new Color(75, 0, 130));
-        JButton btnDetallesLibro = crearBotonAccion("📖 Ver Detalles", new Color(138, 43, 226));
-        JButton btnGuardarLibros = crearBotonAccion("💾 Guardar Libros", new Color(50, 205, 50));
+        JButton btnLibrosAutor = crearBotonAccion("Libros por Autor", new Color(147, 112, 219));
+        JButton btnAgregarLibro = crearBotonAccion("Agregar Libro", new Color(64, 224, 208));
+        JButton btnEditarLibro = crearBotonAccion("Editar Libro", new Color(186, 85, 211));
+        JButton btnEliminarLibro = crearBotonAccion("Eliminar Libro", new Color(32, 178, 170));
+        JButton btnBuscarLibro = crearBotonAccion("Buscar Libro", new Color(75, 0, 130));
+        JButton btnDetallesLibro = crearBotonAccion("Ver Detalles", new Color(138, 43, 226));
+        JButton btnGuardarLibros = crearBotonAccion("Guardar Libros", new Color(50, 205, 50));
         
-        // Implementación de funcionalidades de botones
         btnLibrosAutor.addActionListener(e -> mostrarLibrosPorAutor());
         btnAgregarLibro.addActionListener(e -> agregarLibro());
         btnEditarLibro.addActionListener(e -> editarLibro());
@@ -602,14 +569,13 @@ public class Biblioteca {
         panelAcciones.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
         panelAcciones.setBackground(new Color(255, 255, 255, 200));
         
-        JButton btnVerLibrosAutor = crearBotonAccion("📚 Ver Libros del Autor", new Color(147, 112, 219));
-        JButton btnAgregarAutor = crearBotonAccion("➕ Agregar Autor", new Color(64, 224, 208));
-        JButton btnEditarAutor = crearBotonAccion("✏ Editar Autor", new Color(186, 85, 211));
-        JButton btnEliminarAutor = crearBotonAccion("🗑 Eliminar Autor", new Color(32, 178, 170));
-        JButton btnDetallesAutor = crearBotonAccion("👤 Ver Detalles Autor", new Color(75, 0, 130));
-        JButton btnGuardarAutores = crearBotonAccion("💾 Guardar Autores", new Color(50, 205, 50));
+        JButton btnVerLibrosAutor = crearBotonAccion("Ver Libros del Autor", new Color(147, 112, 219));
+        JButton btnAgregarAutor = crearBotonAccion("Agregar Autor", new Color(64, 224, 208));
+        JButton btnEditarAutor = crearBotonAccion("Editar Autor", new Color(186, 85, 211));
+        JButton btnEliminarAutor = crearBotonAccion("Eliminar Autor", new Color(32, 178, 170));
+        JButton btnDetallesAutor = crearBotonAccion("Ver Detalles Autor", new Color(75, 0, 130));
+        JButton btnGuardarAutores = crearBotonAccion("Guardar Autores", new Color(50, 205, 50));
         
-        // Implementación de funcionalidades de botones
         btnVerLibrosAutor.addActionListener(e -> verLibrosDelAutor());
         btnAgregarAutor.addActionListener(e -> agregarAutor());
         btnEditarAutor.addActionListener(e -> editarAutor());
@@ -706,13 +672,11 @@ public class Biblioteca {
         panelBotones.setBorder(BorderFactory.createTitledBorder("⚡ Acciones Rápidas"));
         panelBotones.setBackground(new Color(255, 255, 255, 200));
         
-        JButton btnGuardar = crearBotonAccion("💾 Guardar Estudiante", new Color(147, 112, 219));
-        JButton btnBuscar = crearBotonAccion("🔍 Buscar Estudiante", new Color(64, 224, 208));
-        JButton btnVerPrestamos = crearBotonAccion("📋 Ver Préstamos", new Color(186, 85, 211));
-        JButton btnLimpiar = crearBotonAccion("🗑 Limpiar Campos", new Color(32, 178, 170));
-        JButton btnGuardarEstudiantes = crearBotonAccion("💾 Guardar Estudiantes", new Color(50, 205, 50));
-        
-        // Implementación de funcionalidades de botones
+        JButton btnGuardar = crearBotonAccion("Guardar Estudiante", new Color(147, 112, 219));
+        JButton btnBuscar = crearBotonAccion("Buscar Estudiante", new Color(64, 224, 208));
+        JButton btnVerPrestamos = crearBotonAccion("Ver Préstamos", new Color(186, 85, 211));
+        JButton btnLimpiar = crearBotonAccion("Limpiar Campos", new Color(32, 178, 170));
+        JButton btnGuardarEstudiantes = crearBotonAccion("Guardar Estudiantes", new Color(50, 205, 50));
         btnGuardar.addActionListener(e -> guardarEstudiante());
         btnBuscar.addActionListener(e -> buscarEstudiante());
         btnVerPrestamos.addActionListener(e -> verPrestamosEstudiante());
@@ -740,14 +704,10 @@ public class Biblioteca {
         
         mainPanel.add(panel, "Estudiantes");
     }
-
-    // ==================== MÉTODOS DE FUNCIONALIDAD ====================
-    
-    // MÉTODOS DE FUNCIONALIDAD PARA LIBROS
     private void mostrarLibrosPorAutor() {
         String autor = JOptionPane.showInputDialog(frame, "Ingrese el nombre del autor:");
         if (autor != null && !autor.trim().isEmpty()) {
-            StringBuilder librosDelAutor = new StringBuilder("📚 Libros de " + autor + ":\n\n");
+            StringBuilder librosDelAutor = new StringBuilder(" Libros de " + autor + ":\n\n");
             int contador = 0;
             
             for (Libro libro : libros) {
@@ -872,7 +832,7 @@ public class Biblioteca {
             "Buscar libro por título o autor:");
         
         if (criterio != null && !criterio.trim().isEmpty()) {
-            StringBuilder resultados = new StringBuilder("🔍 Resultados de búsqueda:\n\n");
+            StringBuilder resultados = new StringBuilder(" Resultados de búsqueda:\n\n");
             int contador = 0;
             
             for (Libro libro : libros) {
@@ -1080,8 +1040,6 @@ public class Biblioteca {
                 "Selección Requerida", JOptionPane.WARNING_MESSAGE);
         }
     }
-
-    // MÉTODOS DE FUNCIONALIDAD PARA ESTUDIANTES
     private void guardarEstudiante() {
         String matricula = camposEstudiante[0].getText().trim();
         String nombre = camposEstudiante[1].getText().trim();
@@ -1096,7 +1054,6 @@ public class Biblioteca {
             return;
         }
         
-        // Verificar si la matrícula ya existe
         for (Estudiante est : estudiantes) {
             if (est.getMatricula().equals(matricula)) {
                 JOptionPane.showMessageDialog(frame, 
@@ -1118,7 +1075,7 @@ public class Biblioteca {
             "Buscar estudiante por matrícula o nombre:");
         
         if (criterio != null && !criterio.trim().isEmpty()) {
-            StringBuilder resultados = new StringBuilder("🔍 Resultados de búsqueda:\n\n");
+            StringBuilder resultados = new StringBuilder("Resultados de búsqueda:\n\n");
             int contador = 0;
             
             for (Estudiante estudiante : estudiantes) {
@@ -1130,7 +1087,6 @@ public class Biblioteca {
                     contador++;
                 }
             }
-            
             if (contador > 0) {
                 resultados.append("\nTotal encontrados: ").append(contador);
                 JOptionPane.showMessageDialog(frame, resultados.toString(), 
@@ -1148,7 +1104,7 @@ public class Biblioteca {
         if (filaSeleccionada >= 0 && filaSeleccionada < estudiantes.size()) {
             Estudiante estudiante = estudiantes.get(filaSeleccionada);
             
-            String prestamos = "📋 Préstamos de " + estudiante.getNombre() + 
+            String prestamos = " Préstamos de " + estudiante.getNombre() + 
                              " (" + estudiante.getMatricula() + "):\n\n" +
                 "• Cien años de soledad (Vence: 15/12/2024)\n" +
                 "• 1984 (Vence: 20/12/2024)\n\n" +
@@ -1253,10 +1209,7 @@ public class Biblioteca {
         btnRegresar.setContentAreaFilled(false);
         
         return btnRegresar;
-    }
-
-    // ==================== CLASES SERIALIZABLES ====================
-    
+    }    
     static class Libro implements Serializable {
         private static final long serialVersionUID = 1L;
         private String titulo;
@@ -1270,8 +1223,6 @@ public class Biblioteca {
             this.anioPublicacion = anioPublicacion;
             this.genero = genero;
         }
-        
-        // Getters y Setters
         public String getTitulo() { return titulo; }
         public void setTitulo(String titulo) { this.titulo = titulo; }
         public String getAutor() { return autor; }
@@ -1295,8 +1246,6 @@ public class Biblioteca {
             this.cantidadLibros = cantidadLibros;
             this.anioNacimiento = anioNacimiento;
         }
-        
-        // Getters y Setters
         public String getNombre() { return nombre; }
         public void setNombre(String nombre) { this.nombre = nombre; }
         public String getNacionalidad() { return nacionalidad; }
@@ -1322,8 +1271,6 @@ public class Biblioteca {
             this.anioIngreso = anioIngreso;
             this.telefono = telefono;
         }
-        
-        // Getters y Setters
         public String getMatricula() { return matricula; }
         public void setMatricula(String matricula) { this.matricula = matricula; }
         public String getNombre() { return nombre; }
